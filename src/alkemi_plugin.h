@@ -49,7 +49,6 @@ typedef struct context_t {
     uint8_t requested_amount[INT256_LENGTH];
     uint8_t holder[ADDRESS_LENGTH];
     uint8_t asset[ADDRESS_LENGTH];
-    
     char ticker[MAX_TICKER_LEN];
     uint8_t decimals;
     uint8_t token_found;
