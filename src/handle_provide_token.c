@@ -1,4 +1,4 @@
-#include "boilerplate_plugin.h"
+#include "alkemi_plugin.h"
 
 // EDIT THIS: Adapt this function to your needs! Remember, the information for tokens are held in
 // `msg->token1` and `msg->token2`. If those pointers are `NULL`, this means the ethereum app didn't
@@ -19,6 +19,14 @@ void handle_provide_token(void *parameters) {
     } else {
         // The Ethereum App did not manage to find the info for the requested token.
         context->token_found = false;
+
+        // Default to ETH's decimals (for wei).
+        context->decimals = 18;
+        msg->additionalScreens = 1;
+
+        strlcpy(context->ticker,
+                "Unknown token. Please contact Ledger support.",
+                sizeof(context->ticker));
 
         // If we wanted to add a screen, say a warning screen for example, we could instruct the
         // ethereum app to add an additional screen by setting `msg->additionalScreens` here, just

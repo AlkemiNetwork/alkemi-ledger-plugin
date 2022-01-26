@@ -1,4 +1,4 @@
-#include "boilerplate_plugin.h"
+#include "alkemi_plugin.h"
 
 // Called once to init.
 void handle_init_contract(void *parameters) {
@@ -28,7 +28,7 @@ void handle_init_contract(void *parameters) {
     // Look for the index of the selectorIndex passed in by `msg`.
     uint8_t i;
     for (i = 0; i < NUM_SELECTORS; i++) {
-        if (memcmp((uint8_t *) PIC(BOILERPLATE_SELECTORS[i]), msg->selector, SELECTOR_SIZE) == 0) {
+        if (memcmp((uint8_t *) PIC(ALKEMI_SELECTORS[i]), msg->selector, SELECTOR_SIZE) == 0) {
             context->selectorIndex = i;
             break;
         }
@@ -43,12 +43,23 @@ void handle_init_contract(void *parameters) {
     // EDIT THIS: Adapt the `cases`, and set the `next_param` to be the first parameter you expect
     // to parse.
     switch (context->selectorIndex) {
-        case SWAP_EXACT_ETH_FOR_TOKENS:
-            context->next_param = MIN_AMOUNT_RECEIVED;
+        // case SWAP_EXACT_ETH_FOR_TOKENS:
+        //     context->next_param = MIN_AMOUNT_RECEIVED;
+        //     break;
+        // case BOILERPLATE_DUMMY_2:
+        //     context->next_param = TOKEN_RECEIVED;
+        // // Keep this
+
+        case ALKEMI_WITHDRAW:
+        case ALKEMI_REPAY_BORROW:
+        case ALKEMI_SUPPLY:
+        case ALKEMI_BORROW:
+        PRINTF("INIT:selectorIndex: %d\n", context->selectorIndex);
+            context->next_param = ASSET;
             break;
-        case BOILERPLATE_DUMMY_2:
-            context->next_param = TOKEN_RECEIVED;
-        // Keep this
+        case ALKEMI_CLAIM_ALK:
+            context->next_param = HOLDER;
+            break;
         default:
             PRINTF("Missing selectorIndex: %d\n", context->selectorIndex);
             msg->result = ETH_PLUGIN_RESULT_ERROR;

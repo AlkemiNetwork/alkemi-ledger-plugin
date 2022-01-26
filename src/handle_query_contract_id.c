@@ -1,4 +1,4 @@
-#include "boilerplate_plugin.h"
+#include "alkemi_plugin.h"
 
 // Sets the first screen to display.
 void handle_query_contract_id(void *parameters) {
@@ -8,12 +8,27 @@ void handle_query_contract_id(void *parameters) {
     // msg->version will be the lower sentence displayed on the screen.
 
     // For the first screen, display the plugin name.
-    strlcpy(msg->name, PLUGIN_NAME, msg->nameLength);
+    strlcpy(msg->name, "Alkemi", msg->nameLength);
 
     // EDIT THIS: Adapt the cases by modifying the strings you pass to `strlcpy`.
     switch (context->selectorIndex) {
-        case SWAP_EXACT_ETH_FOR_TOKENS:
-            strlcpy(msg->version, "Swap", msg->versionLength);
+        // case SWAP_EXACT_ETH_FOR_TOKENS:
+        //     strlcpy(msg->version, "Swap", msg->versionLength);
+        //     break;
+        case ALKEMI_WITHDRAW:
+            strlcpy(msg->version, "Withdraw", msg->versionLength);
+            break;
+        case ALKEMI_REPAY_BORROW:
+            strlcpy(msg->version, "Repay Borrow", msg->versionLength);
+            break;
+        case ALKEMI_SUPPLY:
+            strlcpy(msg->version, "Supply", msg->versionLength);
+            break;
+        case ALKEMI_BORROW:
+            strlcpy(msg->version, "Borrow", msg->versionLength);
+            break;
+        case ALKEMI_CLAIM_ALK:
+            strlcpy(msg->version, "Claim", msg->versionLength);
             break;
         // Keep this
         default:
