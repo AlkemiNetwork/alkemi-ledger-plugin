@@ -32,19 +32,19 @@ from proxy https://etherscan.io/address/0x397c315d64D74d82A731d656f9C4D586D200F9
 static const uint8_t ALKEMI_WITHDRAW_SELECTOR[SELECTOR_SIZE] = {0xf3,
                                                                 0xfe,
                                                                 0xf3,
-                                                                0xa3}; // 0xf3fef3a3
+                                                                0xa3};  // 0xf3fef3a3
 static const uint8_t ALKEMI_REPAY_BORROW_SELECTOR[SELECTOR_SIZE] = {0xab,
                                                                     0xdb,
                                                                     0x5e,
-                                                                    0xa8}; // 0xabdb5ea8
+                                                                    0xa8};  // 0xabdb5ea8
 static const uint8_t ALKEMI_SUPPLY_SELECTOR[SELECTOR_SIZE] = {0xf2,
-                                                            0xb9,
-                                                            0xfd,
-                                                            0xb8}; // 0xf2b9fdb8
+                                                              0xb9,
+                                                              0xfd,
+                                                              0xb8};  // 0xf2b9fdb8
 static const uint8_t ALKEMI_BORROW_SELECTOR[SELECTOR_SIZE] = {0x4b,
-                                                            0x8a,
-                                                            0x35,
-                                                            0x29}; // 0x4b8a3529
+                                                              0x8a,
+                                                              0x35,
+                                                              0x29};  // 0x4b8a3529
 static const uint8_t ALKEMI_TRANSFER_SELECTOR[SELECTOR_SIZE] = {0xa9, 0x05, 0x9c, 0xbb};
 
 /* From contract https://etherscan.io/address/0x14716c982fd8b7f1e8f0b4dbb496dce438a29d93 */

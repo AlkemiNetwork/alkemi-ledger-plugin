@@ -18,7 +18,6 @@ static void copy_address(uint8_t *dst, size_t dst_len, uint8_t *src) {
 }
 
 // EDIT THIS: Remove this function and write your own handlers!
-// static void handle_swap_exact_eth_for_tokens(ethPluginProvideParameter_t *msg, context_t *context) {
 // One param functions handler
 static void handle_multiple(ethPluginProvideParameter_t *msg, context_t *context) {
     if (context->go_to_offset) {
@@ -35,11 +34,11 @@ static void handle_multiple(ethPluginProvideParameter_t *msg, context_t *context
         case AMOUNT:
         case REQUESTED_AMOUNT:
             copy_parameter(context->requested_amount,
-                            sizeof(context->requested_amount),
-                            msg->parameter);
+                           sizeof(context->requested_amount),
+                           msg->parameter);
             context->next_param = UNEXPECTED_PARAMETER;
             break;
-        case HOLDER:  //claimALK
+        case HOLDER:  // claimALK
             copy_address(context->holder, sizeof(context->holder), msg->parameter);
             context->next_param = UNEXPECTED_PARAMETER;
             break;
