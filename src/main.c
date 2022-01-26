@@ -62,27 +62,21 @@ const uint8_t *const ALKEMI_SELECTORS[NUM_SELECTORS] = {
 void dispatch_plugin_calls(int message, void *parameters) {
     switch (message) {
         case ETH_PLUGIN_INIT_CONTRACT:
-        PRINTF("Calling INIT\n");
             handle_init_contract(parameters);
             break;
         case ETH_PLUGIN_PROVIDE_PARAMETER:
-        PRINTF("Calling provide_params\n");
             handle_provide_parameter(parameters);
             break;
         case ETH_PLUGIN_FINALIZE:
-        PRINTF("Calling finalize\n");
             handle_finalize(parameters);
             break;
         case ETH_PLUGIN_PROVIDE_TOKEN:
-        PRINTF("Calling provide token\n");
             handle_provide_token(parameters);
             break;
         case ETH_PLUGIN_QUERY_CONTRACT_ID:
-        PRINTF("Calling query contrat id\n");
             handle_query_contract_id(parameters);
             break;
         case ETH_PLUGIN_QUERY_CONTRACT_UI:
-        PRINTF("Calling query contract ui\n");
             handle_query_contract_ui(parameters);
             break;
         default:
