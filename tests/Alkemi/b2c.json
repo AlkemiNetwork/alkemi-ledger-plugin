@@ -2,7 +2,7 @@
     "chainId": 1,
     "contracts": [
         {
-            "address": "0x82c19bdd07f9ca911ab8bc7bd5faf092736cfa64",
+            "address": "0x397c315d64d74d82a731d656f9c4d586d200f90a",
             "contractName": "AlkemiEarn",
             "selectors": {
                 "0xf3fef3a3": {

@@ -20,40 +20,42 @@ void set_address_ui(ethQueryContractUI_t *msg, context_t *context) {
                                           msg->pluginSharedRW->sha3,
                                           chainid);
             break;
+        case ALKEMI_WITHDRAW:
+        case ALKEMI_SUPPLY:
+        case ALKEMI_BORROW:
+        case ALKEMI_REPAY_BORROW:
+            getEthAddressStringFromBinary(context->asset,
+                                          (uint8_t *) msg->msg + 2,
+                                          msg->pluginSharedRW->sha3,
+                                          chainid);
+            break;
     }
 }
+
+static void set_second_param_ui(ethQueryContractUI_t *msg, context_t *context) {
+    switch (context->selectorIndex) {
+        case ALKEMI_SUPPLY:
+        case ALKEMI_WITHDRAW:
+        case ALKEMI_BORROW:
+        case ALKEMI_REPAY_BORROW:
+            strlcpy(msg->title, "Asset Address.", msg->titleLength);
+            set_address_ui(msg, context);
+            break;
+        case ALKEMI_CLAIM_ALK:
+            strlcpy(msg->title, "Holder.", msg->titleLength);
+            set_address_ui(msg, context);
+            break;
+    }
+}
+
 
 static void set_first_param_ui(ethQueryContractUI_t *msg, context_t *context) {
     switch (context->selectorIndex) {
         case ALKEMI_WITHDRAW:
-            strlcpy(msg->title, "Withdraw.", msg->titleLength);
-            amountToString(context->requested_amount,
-                           sizeof(context->requested_amount),
-                           context->decimals,
-                           context->ticker,
-                           msg->msg,
-                           msg->msgLength);
-            break;
         case ALKEMI_SUPPLY:
-            strlcpy(msg->title, "Supply.", msg->titleLength);
-            amountToString(context->amount,
-                           sizeof(context->amount),
-                           context->decimals,
-                           context->ticker,
-                           msg->msg,
-                           msg->msgLength);
-            break;
         case ALKEMI_BORROW:
-            strlcpy(msg->title, "Borrow.", msg->titleLength);
-            amountToString(context->amount,
-                           sizeof(context->amount),
-                           context->decimals,
-                           context->ticker,
-                           msg->msg,
-                           msg->msgLength);
-            break;
         case ALKEMI_REPAY_BORROW:
-            strlcpy(msg->title, "Repay borrow.", msg->titleLength);
+            strlcpy(msg->title, "Amount.", msg->titleLength);
             amountToString(context->amount,
                            sizeof(context->amount),
                            context->decimals,
@@ -86,9 +88,9 @@ void handle_query_contract_ui(void *parameters) {
         case 0:
             set_first_param_ui(msg, context);
             break;
-        // case 1:
-        //     set_receive_ui(msg, context);
-        //     break;
+        case 1:
+            set_second_param_ui(msg, context);
+            break;
         // case 2:
         //     set_beneficiary_ui(msg, context);
         //     break;

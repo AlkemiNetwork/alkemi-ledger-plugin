@@ -32,6 +32,11 @@ static void handle_multiple(ethPluginProvideParameter_t *msg, context_t *context
             context->next_param = AMOUNT;
             break;
         case AMOUNT:
+            copy_parameter(context->amount,
+                           sizeof(context->amount),
+                           msg->parameter);
+            context->next_param = UNEXPECTED_PARAMETER;
+            break;
         case REQUESTED_AMOUNT:
             copy_parameter(context->requested_amount,
                            sizeof(context->requested_amount),
