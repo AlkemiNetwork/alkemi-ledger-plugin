@@ -68,8 +68,8 @@ static void handle_liquidate_borrow(ethPluginProvideParameter_t *msg, context_t 
             break;
         case ASSET_COLLATERAL:
             copy_address(context->assetCollateral,
-+                         sizeof(context->assetCollateral),
-+                         msg->parameter);
+                         sizeof(context->assetCollateral),
+                         msg->parameter);
             context->next_param = REQUESTED_AMOUNT_CLOSE;
             break;
         case REQUESTED_AMOUNT_CLOSE:

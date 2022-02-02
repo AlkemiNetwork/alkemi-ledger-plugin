@@ -56,7 +56,6 @@ static const uint8_t ALKEMI_CLAIM_ALK_SELECTOR[SELECTOR_SIZE] = {0x71,
                                                                  0xe8,
                                                                  0x92};  // 0x71d6e892
 
-
 // Array of all the different boilerplate selectors. Make sure this follows the same order as the
 // enum defined in `boilerplate_plugin.h`
 // EDIT THIS: Use the names of the array declared above.
@@ -65,8 +64,7 @@ const uint8_t *const ALKEMI_SELECTORS[NUM_SELECTORS] = {ALKEMI_WITHDRAW_SELECTOR
                                                         ALKEMI_SUPPLY_SELECTOR,
                                                         ALKEMI_BORROW_SELECTOR,
                                                         ALKEMI_LIQUIDATE_BORROW_SELECTOR,
-                                                        ALKEMI_CLAIM_ALK_SELECTOR
-};
+                                                        ALKEMI_CLAIM_ALK_SELECTOR};
 
 // Function to dispatch calls from the ethereum app.
 void dispatch_plugin_calls(int message, void *parameters) {
