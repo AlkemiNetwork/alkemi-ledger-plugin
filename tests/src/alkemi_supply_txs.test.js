@@ -21,7 +21,7 @@ test.skip('[Nano S] Perform a supply', zemu("nanos", async (sim, eth) => {
 
   const amount = parseUnits("28471151959593036279", 'wei');
 
-  const WBTC = "0x1260fac5e5542a773aa44fbcfedf7c193bc2c599";
+  const WBTC = "0x2260fac5e5542a773aa44fbcfedf7c193bc2c599";
 
   const {data} = await contract.populateTransaction.supply(WBTC, amount );
 
