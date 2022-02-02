@@ -32,15 +32,11 @@ static void handle_multiple(ethPluginProvideParameter_t *msg, context_t *context
             context->next_param = AMOUNT;
             break;
         case AMOUNT:
-            copy_parameter(context->amount,
-                           sizeof(context->amount),
-                           msg->parameter);
+            copy_parameter(context->amount, sizeof(context->amount), msg->parameter);
             context->next_param = UNEXPECTED_PARAMETER;
             break;
         case REQUESTED_AMOUNT:
-            copy_parameter(context->amount,
-                           sizeof(context->amount),
-                           msg->parameter);
+            copy_parameter(context->amount, sizeof(context->amount), msg->parameter);
             context->next_param = UNEXPECTED_PARAMETER;
             break;
         case HOLDER:  // claimALK
@@ -71,13 +67,13 @@ static void handle_liquidate_borrow(ethPluginProvideParameter_t *msg, context_t 
             context->next_param = ASSET_COLLATERAL;
             break;
         case ASSET_COLLATERAL:
-            copy_address(context->assetCollateral, sizeof(context->assetCollateral), msg->parameter);
+            copy_address(context->assetCollateral,
++                         sizeof(context->assetCollateral),
++                         msg->parameter);
             context->next_param = REQUESTED_AMOUNT_CLOSE;
             break;
         case REQUESTED_AMOUNT_CLOSE:
-            copy_parameter(context->amount,
-                           sizeof(context->amount),
-                           msg->parameter);
+            copy_parameter(context->amount, sizeof(context->amount), msg->parameter);
             context->next_param = UNEXPECTED_PARAMETER;
             break;
         default:

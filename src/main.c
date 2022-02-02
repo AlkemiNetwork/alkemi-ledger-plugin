@@ -48,25 +48,24 @@ static const uint8_t ALKEMI_BORROW_SELECTOR[SELECTOR_SIZE] = {0x4b,
 static const uint8_t ALKEMI_LIQUIDATE_BORROW_SELECTOR[SELECTOR_SIZE] = {0xe6,
                                                                         0x16,
                                                                         0x04,
-                                                                        0xcf}; // 0xe61604cf
+                                                                        0xcf};  // 0xe61604cf
 
 /* From contract https://etherscan.io/address/0x14716c982fd8b7f1e8f0b4dbb496dce438a29d93 */
 static const uint8_t ALKEMI_CLAIM_ALK_SELECTOR[SELECTOR_SIZE] = {0x71,
                                                                  0xd6,
                                                                  0xe8,
-                                                                 0x92}; // 0x71d6e892
+                                                                 0x92};  // 0x71d6e892
 
 
 // Array of all the different boilerplate selectors. Make sure this follows the same order as the
 // enum defined in `boilerplate_plugin.h`
 // EDIT THIS: Use the names of the array declared above.
-const uint8_t *const ALKEMI_SELECTORS[NUM_SELECTORS] = {
-    ALKEMI_WITHDRAW_SELECTOR,
-    ALKEMI_REPAY_BORROW_SELECTOR,
-    ALKEMI_SUPPLY_SELECTOR,
-    ALKEMI_BORROW_SELECTOR,
-    ALKEMI_LIQUIDATE_BORROW_SELECTOR,
-    ALKEMI_CLAIM_ALK_SELECTOR
+const uint8_t *const ALKEMI_SELECTORS[NUM_SELECTORS] = {ALKEMI_WITHDRAW_SELECTOR,
+                                                        ALKEMI_REPAY_BORROW_SELECTOR,
+                                                        ALKEMI_SUPPLY_SELECTOR,
+                                                        ALKEMI_BORROW_SELECTOR,
+                                                        ALKEMI_LIQUIDATE_BORROW_SELECTOR,
+                                                        ALKEMI_CLAIM_ALK_SELECTOR
 };
 
 // Function to dispatch calls from the ethereum app.

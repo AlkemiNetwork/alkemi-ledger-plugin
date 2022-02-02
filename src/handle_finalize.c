@@ -13,7 +13,7 @@ void handle_finalize(void *parameters) {
     //     msg->numScreens += 1;
     // }
 
-   switch (context->selectorIndex) {
+    switch (context->selectorIndex) {
         case ALKEMI_CLAIM_ALK:
             msg->numScreens = 1;
             break;
@@ -30,7 +30,6 @@ void handle_finalize(void *parameters) {
         default:
             msg->numScreens = 0;
     }
-
 
     // EDIT THIS: set `tokenLookup1` (and maybe `tokenLookup2`) to point to
     // token addresses you will info for (such as decimals, ticker...).

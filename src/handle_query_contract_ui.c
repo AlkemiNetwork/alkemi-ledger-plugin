@@ -86,8 +86,6 @@ static void set_third_param_ui(ethQueryContractUI_t *msg, context_t *context) {
         case ALKEMI_LIQUIDATE_BORROW:
             strlcpy(msg->title, "Asset Collateral.", msg->titleLength);
             set_address_collateral_ui(msg, context);
-            
-            // strlcpy(msg->msg, strcat(context->ticker2, msg->msg), msg->msgLength);
             break;
     }
 }
