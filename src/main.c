@@ -45,26 +45,28 @@ static const uint8_t ALKEMI_BORROW_SELECTOR[SELECTOR_SIZE] = {0x4b,
                                                               0x8a,
                                                               0x35,
                                                               0x29};  // 0x4b8a3529
-static const uint8_t ALKEMI_TRANSFER_SELECTOR[SELECTOR_SIZE] = {0xa9, 0x05, 0x9c, 0xbb};
+static const uint8_t ALKEMI_LIQUIDATE_BORROW_SELECTOR[SELECTOR_SIZE] = {0xe6,
+                                                                        0x16,
+                                                                        0x04,
+                                                                        0xcf}; // 0xe61604cf
 
 /* From contract https://etherscan.io/address/0x14716c982fd8b7f1e8f0b4dbb496dce438a29d93 */
-static const uint8_t ALKEMI_CLAIM_ALK_SELECTOR[SELECTOR_SIZE] = {0x71, 0xd6, 0xe8, 0x92};
+static const uint8_t ALKEMI_CLAIM_ALK_SELECTOR[SELECTOR_SIZE] = {0x71,
+                                                                 0xd6,
+                                                                 0xe8,
+                                                                 0x92}; // 0x71d6e892
 
-/* From ERC20 tokens contract */
-static const uint8_t ALKEMI_APPROVE_SELECTOR[SELECTOR_SIZE] = {0x09, 0x5e, 0xa7, 0xb3};
 
 // Array of all the different boilerplate selectors. Make sure this follows the same order as the
 // enum defined in `boilerplate_plugin.h`
 // EDIT THIS: Use the names of the array declared above.
 const uint8_t *const ALKEMI_SELECTORS[NUM_SELECTORS] = {
-    // SWAP_EXACT_ETH_FOR_TOKENS_SELECTOR,
-    // BOILERPLATE_DUMMY_SELECTOR_2,
-    // ALKEMI_APPROVE_SELECTOR,
     ALKEMI_WITHDRAW_SELECTOR,
     ALKEMI_REPAY_BORROW_SELECTOR,
     ALKEMI_SUPPLY_SELECTOR,
     ALKEMI_BORROW_SELECTOR,
-    ALKEMI_CLAIM_ALK_SELECTOR,
+    ALKEMI_LIQUIDATE_BORROW_SELECTOR,
+    ALKEMI_CLAIM_ALK_SELECTOR
 };
 
 // Function to dispatch calls from the ethereum app.

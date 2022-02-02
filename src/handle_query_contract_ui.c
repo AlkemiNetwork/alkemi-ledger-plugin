@@ -3,7 +3,31 @@
 // EDIT THIS: You need to adapt / remove the static functions (set_send_ui, set_receive_ui ...) to
 // match what you wish to display.
 
-void set_address_ui(ethQueryContractUI_t *msg, context_t *context) {
+void set_asset_address_ui(ethQueryContractUI_t *msg, context_t *context) {
+    // Prefix the address with `0x`.
+
+    msg->msg[0] = '0';
+    msg->msg[1] = 'x';
+
+    // We need a random chainID for legacy reasons with `getEthAddressStringFromBinary`.
+    // Setting it to `0` will make it work with every chainID :)
+    uint64_t chainid = 0;
+
+    switch (context->selectorIndex) {
+        case ALKEMI_WITHDRAW:
+        case ALKEMI_SUPPLY:
+        case ALKEMI_BORROW:
+        case ALKEMI_REPAY_BORROW:
+        case ALKEMI_LIQUIDATE_BORROW:
+            getEthAddressStringFromBinary(context->asset,
+                                          (uint8_t *) msg->msg + 2,
+                                          msg->pluginSharedRW->sha3,
+                                          chainid);
+            break;
+    }
+}
+
+void set_holder_address_ui(ethQueryContractUI_t *msg, context_t *context) {
     // Prefix the address with `0x`.
 
     msg->msg[0] = '0';
@@ -15,16 +39,28 @@ void set_address_ui(ethQueryContractUI_t *msg, context_t *context) {
 
     switch (context->selectorIndex) {
         case ALKEMI_CLAIM_ALK:
+        case ALKEMI_LIQUIDATE_BORROW:
             getEthAddressStringFromBinary(context->holder,
                                           (uint8_t *) msg->msg + 2,
                                           msg->pluginSharedRW->sha3,
                                           chainid);
             break;
-        case ALKEMI_WITHDRAW:
-        case ALKEMI_SUPPLY:
-        case ALKEMI_BORROW:
-        case ALKEMI_REPAY_BORROW:
-            getEthAddressStringFromBinary(context->asset,
+    }
+}
+
+void set_address_collateral_ui(ethQueryContractUI_t *msg, context_t *context) {
+    // Prefix the address with `0x`.
+
+    msg->msg[0] = '0';
+    msg->msg[1] = 'x';
+
+    // We need a random chainID for legacy reasons with `getEthAddressStringFromBinary`.
+    // Setting it to `0` will make it work with every chainID :)
+    uint64_t chainid = 0;
+
+    switch (context->selectorIndex) {
+        case ALKEMI_LIQUIDATE_BORROW:
+            getEthAddressStringFromBinary(context->assetCollateral,
                                           (uint8_t *) msg->msg + 2,
                                           msg->pluginSharedRW->sha3,
                                           chainid);
@@ -38,16 +74,37 @@ static void set_second_param_ui(ethQueryContractUI_t *msg, context_t *context) {
         case ALKEMI_WITHDRAW:
         case ALKEMI_BORROW:
         case ALKEMI_REPAY_BORROW:
+        case ALKEMI_LIQUIDATE_BORROW:
             strlcpy(msg->title, "Asset Address.", msg->titleLength);
-            set_address_ui(msg, context);
-            break;
-        case ALKEMI_CLAIM_ALK:
-            strlcpy(msg->title, "Holder.", msg->titleLength);
-            set_address_ui(msg, context);
+            set_asset_address_ui(msg, context);
             break;
     }
 }
 
+static void set_third_param_ui(ethQueryContractUI_t *msg, context_t *context) {
+    switch (context->selectorIndex) {
+        case ALKEMI_LIQUIDATE_BORROW:
+            strlcpy(msg->title, "Asset Collateral.", msg->titleLength);
+            set_address_collateral_ui(msg, context);
+            
+            // strlcpy(msg->msg, strcat(context->ticker2, msg->msg), msg->msgLength);
+            break;
+    }
+}
+
+static void set_fourth_param_ui(ethQueryContractUI_t *msg, context_t *context) {
+    switch (context->selectorIndex) {
+        case ALKEMI_LIQUIDATE_BORROW:
+            strlcpy(msg->title, "Requested Amount.", msg->titleLength);
+            amountToString(context->amount,
+                           sizeof(context->amount),
+                           context->decimals,
+                           context->ticker,
+                           msg->msg,
+                           msg->msgLength);
+            break;
+    }
+}
 
 static void set_first_param_ui(ethQueryContractUI_t *msg, context_t *context) {
     switch (context->selectorIndex) {
@@ -64,8 +121,9 @@ static void set_first_param_ui(ethQueryContractUI_t *msg, context_t *context) {
                            msg->msgLength);
             break;
         case ALKEMI_CLAIM_ALK:
-            strlcpy(msg->title, "Holder.", msg->titleLength);
-            set_address_ui(msg, context);
+        case ALKEMI_LIQUIDATE_BORROW:
+            strlcpy(msg->title, "Target Account.", msg->titleLength);
+            set_holder_address_ui(msg, context);
             break;
     }
 }
@@ -91,9 +149,12 @@ void handle_query_contract_ui(void *parameters) {
         case 1:
             set_second_param_ui(msg, context);
             break;
-        // case 2:
-        //     set_beneficiary_ui(msg, context);
-        //     break;
+        case 2:
+            set_third_param_ui(msg, context);
+            break;
+        case 3:
+            set_fourth_param_ui(msg, context);
+            break;
         // Keep this
         default:
             PRINTF("Received an invalid screenIndex\n");

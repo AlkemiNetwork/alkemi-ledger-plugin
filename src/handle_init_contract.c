@@ -52,6 +52,9 @@ void handle_init_contract(void *parameters) {
         case ALKEMI_CLAIM_ALK:
             context->next_param = HOLDER;
             break;
+        case ALKEMI_LIQUIDATE_BORROW:
+            context->next_param = TARGET_ACCOUNT;
+            break;
         default:
             PRINTF("Missing selectorIndex: %d\n", context->selectorIndex);
             msg->result = ETH_PLUGIN_RESULT_ERROR;

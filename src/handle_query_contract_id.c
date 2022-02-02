@@ -27,8 +27,11 @@ void handle_query_contract_id(void *parameters) {
         case ALKEMI_BORROW:
             strlcpy(msg->version, "Borrow", msg->versionLength);
             break;
+        case ALKEMI_LIQUIDATE_BORROW:
+            strlcpy(msg->version, "Liquidate Borrow", msg->versionLength);
+            break;
         case ALKEMI_CLAIM_ALK:
-            strlcpy(msg->version, "Claim", msg->versionLength);
+            strlcpy(msg->version, "Claim ALKs", msg->versionLength);
             break;
         // Keep this
         default:

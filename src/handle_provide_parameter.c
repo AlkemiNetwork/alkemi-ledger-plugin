@@ -38,13 +38,46 @@ static void handle_multiple(ethPluginProvideParameter_t *msg, context_t *context
             context->next_param = UNEXPECTED_PARAMETER;
             break;
         case REQUESTED_AMOUNT:
-            copy_parameter(context->requested_amount,
-                           sizeof(context->requested_amount),
+            copy_parameter(context->amount,
+                           sizeof(context->amount),
                            msg->parameter);
             context->next_param = UNEXPECTED_PARAMETER;
             break;
         case HOLDER:  // claimALK
             copy_address(context->holder, sizeof(context->holder), msg->parameter);
+            context->next_param = UNEXPECTED_PARAMETER;
+            break;
+        default:
+            PRINTF("Param not supported: %d\n", context->next_param);
+            msg->result = ETH_PLUGIN_RESULT_ERROR;
+            break;
+    }
+}
+
+static void handle_liquidate_borrow(ethPluginProvideParameter_t *msg, context_t *context) {
+    if (context->go_to_offset) {
+        if (msg->parameterOffset != context->offset + SELECTOR_SIZE) {
+            return;
+        }
+        context->go_to_offset = false;
+    }
+    switch (context->next_param) {
+        case TARGET_ACCOUNT:  // LiquidateBorrow
+            copy_address(context->holder, sizeof(context->holder), msg->parameter);
+            context->next_param = ASSET_BORROW;
+            break;
+        case ASSET_BORROW:  // LiquidateBorrow
+            copy_address(context->asset, sizeof(context->asset), msg->parameter);
+            context->next_param = ASSET_COLLATERAL;
+            break;
+        case ASSET_COLLATERAL:
+            copy_address(context->assetCollateral, sizeof(context->assetCollateral), msg->parameter);
+            context->next_param = REQUESTED_AMOUNT_CLOSE;
+            break;
+        case REQUESTED_AMOUNT_CLOSE:
+            copy_parameter(context->amount,
+                           sizeof(context->amount),
+                           msg->parameter);
             context->next_param = UNEXPECTED_PARAMETER;
             break;
         default:
@@ -69,17 +102,15 @@ void handle_provide_parameter(void *parameters) {
 
     // EDIT THIS: adapt the cases and the names of the functions.
     switch (context->selectorIndex) {
-        // case SWAP_EXACT_ETH_FOR_TOKENS:
-        //     handle_swap_exact_eth_for_tokens(msg, context);
-        //     break;
-        // case BOILERPLATE_DUMMY_2:
-        //     break;
         case ALKEMI_WITHDRAW:
         case ALKEMI_REPAY_BORROW:
         case ALKEMI_SUPPLY:
         case ALKEMI_BORROW:
         case ALKEMI_CLAIM_ALK:
             handle_multiple(msg, context);
+            break;
+        case ALKEMI_LIQUIDATE_BORROW:
+            handle_liquidate_borrow(msg, context);
             break;
         default:
             PRINTF("Selector Index not supported: %d\n", context->selectorIndex);

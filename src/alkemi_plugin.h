@@ -6,7 +6,7 @@
 
 // Number of selectors defined in this plugin. Should match the enum `selector_t`.
 // EDIT THIS: Put in the number of selectors your plugin is going to support.
-#define NUM_SELECTORS 5
+#define NUM_SELECTORS 6
 
 // Name of the plugin.
 // EDIT THIS: Replace with your plugin name.
@@ -22,6 +22,7 @@ typedef enum {
     ALKEMI_REPAY_BORROW,
     ALKEMI_SUPPLY,
     ALKEMI_BORROW,
+    ALKEMI_LIQUIDATE_BORROW,
     ALKEMI_CLAIM_ALK,
 } alkemiSelector_t;
 
@@ -30,11 +31,15 @@ typedef enum {
 typedef enum {
     AMOUNT = 0,
     ASSET,
+    TARGET_ACCOUNT,
     REQUESTED_AMOUNT,
     HOLDER,
     PATH_OFFSET,
     PATH_LENGTH,
     UNEXPECTED_PARAMETER,
+    ASSET_BORROW,
+    ASSET_COLLATERAL,
+    REQUESTED_AMOUNT_CLOSE
 } parameter;
 
 // EDIT THIS: Rename `BOILERPLATE` to be the same as the one initialized in `main.c`.
@@ -46,12 +51,18 @@ extern const uint8_t *const ALKEMI_SELECTORS[NUM_SELECTORS];
 typedef struct context_t {
     // For display.
     uint8_t amount[INT256_LENGTH];
-    uint8_t requested_amount[INT256_LENGTH];
+    // uint8_t requested_amount[INT256_LENGTH];
     uint8_t holder[ADDRESS_LENGTH];
     uint8_t asset[ADDRESS_LENGTH];
+    // uint8_t assetBorrow[ADDRESS_LENGTH];
+    // uint8_t targetAccount[ADDRESS_LENGTH];
+    uint8_t assetCollateral[ADDRESS_LENGTH];
+    // uint8_t requestedAmountClose[INT256_LENGTH];
     char ticker[MAX_TICKER_LEN];
+    char ticker2[MAX_TICKER_LEN];
     uint8_t decimals;
     uint8_t token_found;
+    uint8_t token2_found;
 
     // For parsing data.
     uint8_t next_param;  // Set to be the next param we expect to parse.

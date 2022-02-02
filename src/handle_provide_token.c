@@ -22,10 +22,10 @@ void handle_provide_token(void *parameters) {
 
         // Default to ETH's decimals (for wei).
         context->decimals = 18;
-        msg->additionalScreens = 1;
+        // msg->additionalScreens = 1;
 
         strlcpy(context->ticker,
-                "Unknown token. Please contact Ledger support.",
+                "??? token ",
                 sizeof(context->ticker));
 
         // If we wanted to add a screen, say a warning screen for example, we could instruct the
@@ -33,5 +33,26 @@ void handle_provide_token(void *parameters) {
         // like so:
         // msg->additionalScreens = 1;
     }
+
+    if (msg->token2) {
+        // Store its ticker.
+        strlcpy(context->ticker2, (char *) msg->token2->ticker, sizeof(context->ticker2));
+
+        // Keep track that we found the token.
+        context->token2_found = true;
+    } else {
+        // The Ethereum App did not manage to find the info for the requested token.
+        context->token2_found = false;
+
+        strlcpy(context->ticker2,
+                "??? token ",
+                sizeof(context->ticker2));
+
+        // If we wanted to add a screen, say a warning screen for example, we could instruct the
+        // ethereum app to add an additional screen by setting `msg->additionalScreens` here, just
+        // like so:
+        // msg->additionalScreens = 1;
+    }
+    
     msg->result = ETH_PLUGIN_RESULT_OK;
 }

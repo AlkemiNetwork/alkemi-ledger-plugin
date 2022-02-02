@@ -32,6 +32,26 @@
                     ],
                     "method": "borrow",
                     "plugin": "Alkemi"
+		        },
+                "0xe61604cf": {
+                    "erc20OfInterest": [
+                        "assetBorrow",
+                        "assetCollateral"
+                    ],
+                    "method": "liquidateBorrow",
+                    "plugin": "Alkemi"
+		        }
+	        }
+	    },
+        {
+            "address": "0x14716c982fd8b7f1e8f0b4dbb496dce438a29d93",
+            "contractName": "AlkemiDao",
+            "selectors": {
+                "0x71d6e892": {
+                    "erc20OfInterest": [
+                    ],
+                    "method": "claimAlk",
+                    "plugin": "Alkemi"
 		        }
 	        }
 	    }
