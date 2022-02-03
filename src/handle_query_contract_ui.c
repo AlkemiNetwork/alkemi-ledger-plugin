@@ -68,7 +68,7 @@ void set_address_collateral_ui(ethQueryContractUI_t *msg, context_t *context) {
     }
 }
 
-static void set_second_param_ui(ethQueryContractUI_t *msg, context_t *context) {
+static void set_third_param_ui(ethQueryContractUI_t *msg, context_t *context) {
     switch (context->selectorIndex) {
         case ALKEMI_SUPPLY:
         case ALKEMI_WITHDRAW:
@@ -81,19 +81,28 @@ static void set_second_param_ui(ethQueryContractUI_t *msg, context_t *context) {
     }
 }
 
-static void set_third_param_ui(ethQueryContractUI_t *msg, context_t *context) {
+static void set_fourth_param_ui(ethQueryContractUI_t *msg, context_t *context) {
     switch (context->selectorIndex) {
         case ALKEMI_LIQUIDATE_BORROW:
-            strlcpy(msg->title, "Asset Collateral.", msg->titleLength);
+            strlcpy(msg->title, "Collateral Asset.", msg->titleLength);
+            strlcpy(msg->msg, context->ticker2, msg->msgLength);
+            break;
+    }
+}
+
+static void set_fifth_param_ui(ethQueryContractUI_t *msg, context_t *context) {
+    switch (context->selectorIndex) {
+        case ALKEMI_LIQUIDATE_BORROW:
+            strlcpy(msg->title, "Coll. Asset Addr.", msg->titleLength);
             set_address_collateral_ui(msg, context);
             break;
     }
 }
 
-static void set_fourth_param_ui(ethQueryContractUI_t *msg, context_t *context) {
+static void set_second_param_ui(ethQueryContractUI_t *msg, context_t *context) {
     switch (context->selectorIndex) {
         case ALKEMI_LIQUIDATE_BORROW:
-            strlcpy(msg->title, "Requested Amount.", msg->titleLength);
+            strlcpy(msg->title, "Amount.", msg->titleLength);
             amountToString(context->amount,
                            sizeof(context->amount),
                            context->decimals,
@@ -152,6 +161,9 @@ void handle_query_contract_ui(void *parameters) {
             break;
         case 3:
             set_fourth_param_ui(msg, context);
+            break;
+        case 4:
+            set_fifth_param_ui(msg, context);
             break;
         // Keep this
         default:

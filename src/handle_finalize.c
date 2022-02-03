@@ -24,7 +24,7 @@ void handle_finalize(void *parameters) {
             msg->numScreens = 2;
             break;
         case ALKEMI_LIQUIDATE_BORROW:
-            msg->numScreens = 4;
+            msg->numScreens = 5;
             break;
         // Keep this
         default:
