@@ -70,10 +70,6 @@ void set_address_collateral_ui(ethQueryContractUI_t *msg, context_t *context) {
 
 static void set_third_param_ui(ethQueryContractUI_t *msg, context_t *context) {
     switch (context->selectorIndex) {
-        case ALKEMI_SUPPLY:
-        case ALKEMI_WITHDRAW:
-        case ALKEMI_BORROW:
-        case ALKEMI_REPAY_BORROW:
         case ALKEMI_LIQUIDATE_BORROW:
             strlcpy(msg->title, "Asset Address.", msg->titleLength);
             set_asset_address_ui(msg, context);
@@ -101,6 +97,13 @@ static void set_fifth_param_ui(ethQueryContractUI_t *msg, context_t *context) {
 
 static void set_second_param_ui(ethQueryContractUI_t *msg, context_t *context) {
     switch (context->selectorIndex) {
+        case ALKEMI_SUPPLY:
+        case ALKEMI_WITHDRAW:
+        case ALKEMI_BORROW:
+        case ALKEMI_REPAY_BORROW:
+            strlcpy(msg->title, "Asset Address.", msg->titleLength);
+            set_asset_address_ui(msg, context);
+            break;
         case ALKEMI_LIQUIDATE_BORROW:
             strlcpy(msg->title, "Amount.", msg->titleLength);
             amountToString(context->amount,

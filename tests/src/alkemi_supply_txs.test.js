@@ -44,7 +44,7 @@ test.skip('[Nano S] Perform a supply', zemu("nanos", async (sim, eth) => {
   await waitForAppScreen(sim);
   // Navigate the display by pressing the right button 10 times, then pressing both buttons to accept the transaction.
   // EDIT THIS: modify `10` to fix the number of screens you are expecting to navigate through.
-  // await sim.navigateAndCompareSnapshots('.', 'nanos_perform_a_supply', [10, 0]);
+  await sim.navigateAndCompareSnapshots('.', 'nanos_perform_a_supply', [9, 0]);
 
   await tx;
 }));

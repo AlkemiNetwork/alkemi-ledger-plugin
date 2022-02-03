@@ -21,9 +21,9 @@ test.skip('[Nano S] Perform a withdraw', zemu("nanos", async (sim, eth) => {
 
   const amount = parseUnits("28471151959593036279", 'wei');
 
-  const WETH = "0x1f52453b32bfab737247114d56d756a6c37dd9ef";
+  const DAI = "0x6b175474e89094c44da98b954eedeac495271d0f";
 
-  const {data} = await contract.populateTransaction.withdraw(WETH, amount );
+  const {data} = await contract.populateTransaction.withdraw(DAI, amount );
 
   // Get the generic transaction template
   let unsignedTx = genericTx;
@@ -44,7 +44,7 @@ test.skip('[Nano S] Perform a withdraw', zemu("nanos", async (sim, eth) => {
   await waitForAppScreen(sim);
   // Navigate the display by pressing the right button 10 times, then pressing both buttons to accept the transaction.
   // EDIT THIS: modify `10` to fix the number of screens you are expecting to navigate through.
-  // await sim.navigateAndCompareSnapshots('.', 'nanos_perform_a_withdraw', [10, 0]);
+  await sim.navigateAndCompareSnapshots('.', 'nanos_perform_a_withdraw', [9, 0]);
 
   await tx;
 }));
