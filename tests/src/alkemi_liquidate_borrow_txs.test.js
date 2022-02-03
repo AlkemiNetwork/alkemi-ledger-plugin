@@ -16,7 +16,7 @@ const abi = require(abi_path);
 
 // Nanos S test
 // EDIT THIS: build your own test
-test.skip('[Nano S] Perform a Liquidate Borrow', zemu("nanos", async (sim, eth) => {
+test('[Nano S] Perform a Liquidate Borrow', zemu("nanos", async (sim, eth) => {
   const contract = new ethers.Contract(contractAddr, abi);
 
   const holder = "0xeb4d9c6614fe4d4d4ada2565a6d895ba3ea08796";
@@ -51,20 +51,20 @@ test.skip('[Nano S] Perform a Liquidate Borrow', zemu("nanos", async (sim, eth) 
 
 // NanoX test
 // EDIT THIS: build your own test
-test('[Nano X] Perform a Liquidate Borrow', zemu("nanos", async (sim, eth) => {
+// test('[Nano X] Perform a Liquidate Borrow', zemu("nanos", async (sim, eth) => {
 
-    // NO REAL LIQUIDATION BORROW TRANSACTION YET
-//   const serializedTx = txFromEtherscan("0x02f892018201a3849502f9008526bf54a43a831624e99414716c982fd8b7f1e8f0b4dbb496dce438a29d9380a471d6e892000000000000000000000000123ceac83c6d5110671f09e96c0f8076ce4bc839c080a013d06b59d63c54d48bb9478bb05fd879377c7bb779e5b60099be45f24119979da03d4ad8745c6cb9c849dc3f215f9f9eaaeb30442a2a9b0dc4471361fb9470dcc4");
+//     // NO REAL LIQUIDATION BORROW TRANSACTION YET
+// //   const serializedTx = txFromEtherscan("0x02f892018201a3849502f9008526bf54a43a831624e99414716c982fd8b7f1e8f0b4dbb496dce438a29d9380a471d6e892000000000000000000000000123ceac83c6d5110671f09e96c0f8076ce4bc839c080a013d06b59d63c54d48bb9478bb05fd879377c7bb779e5b60099be45f24119979da03d4ad8745c6cb9c849dc3f215f9f9eaaeb30442a2a9b0dc4471361fb9470dcc4");
 
-//   const tx = eth.signTransaction(
-//     "44'/60'/0'/0",
-//     serializedTx,
-//   );
+// //   const tx = eth.signTransaction(
+// //     "44'/60'/0'/0",
+// //     serializedTx,
+// //   );
 
-//   // Wait for the application to actually load and parse the transaction
-//   await waitForAppScreen(sim);
-  // Navigate the display by pressing the right button 6 times, then pressing both buttons to accept the transaction.
-  // await sim.navigateAndCompareSnapshots('.', 'nanox_perform_a Liquidate Borrow', [10, 0]);
+// //   // Wait for the application to actually load and parse the transaction
+// //   await waitForAppScreen(sim);
+//   // Navigate the display by pressing the right button 6 times, then pressing both buttons to accept the transaction.
+//   // await sim.navigateAndCompareSnapshots('.', 'nanox_perform_a Liquidate Borrow', [10, 0]);
 
-  await tx;
-}));
+// //   await tx;
+// }));
