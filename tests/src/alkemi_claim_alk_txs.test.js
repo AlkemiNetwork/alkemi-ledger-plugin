@@ -16,7 +16,7 @@ const abi = require(abi_path);
 
 // Nanos S test
 // EDIT THIS: build your own test
-test.skip('[Nano S] Perform an ALK claim', zemu("nanos", async (sim, eth) => {
+test('[Nano S] Perform an ALK claim', zemu("nanos", async (sim, eth) => {
   const contract = new ethers.Contract(contractAddr, abi);
 
   const holder = "0xeb4d9c6614fe4d4d4ada2565a6d895ba3ea08796";
