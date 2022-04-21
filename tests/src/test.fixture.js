@@ -1,4 +1,5 @@
-import Zemu from '@zondax/zemu';
+import Zemu, { DEFAULT_START_OPTIONS} from '@zondax/zemu';
+
 import Eth from '@ledgerhq/hw-app-eth';
 import { generate_plugin_config } from './generate_plugin_config';
 import { parseEther, parseUnits, RLP} from "ethers/lib/utils";
@@ -10,9 +11,11 @@ async function waitForAppScreen(sim) {
 }
 
 const sim_options_generic = {
+    ...DEFAULT_START_OPTIONS,
     logging: true,
     X11: true,
     startDelay: 5000,
+    startText: 'is ready',
     custom: '',
 };
 
