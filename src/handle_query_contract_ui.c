@@ -150,6 +150,13 @@ void handle_query_contract_ui(void *parameters) {
     ethQueryContractUI_t *msg = (ethQueryContractUI_t *) parameters;
     context_t *context = (context_t *) msg->pluginContext;
 
+    // Ensure all the parameters have been received. When it is the
+    // case, next_param is always set to "UNEXPECTED_PARAMETER".
+    if (context->next_param != UNEXPECTED_PARAMETER) {
+        msg->result = ETH_PLUGIN_RESULT_ERROR;
+        return;
+    }
+
     // msg->title is the upper line displayed on the device.
     // msg->msg is the lower line displayed on the device.
 
