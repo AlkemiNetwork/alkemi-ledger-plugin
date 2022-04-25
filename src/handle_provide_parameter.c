@@ -20,22 +20,12 @@ static void copy_address(uint8_t *dst, size_t dst_len, uint8_t *src) {
 // EDIT THIS: Remove this function and write your own handlers!
 // One param functions handler
 static void handle_multiple(ethPluginProvideParameter_t *msg, context_t *context) {
-    if (context->go_to_offset) {
-        if (msg->parameterOffset != context->offset + SELECTOR_SIZE) {
-            return;
-        }
-        context->go_to_offset = false;
-    }
     switch (context->next_param) {
         case ASSET:
             copy_address(context->asset, sizeof(context->asset), msg->parameter);
             context->next_param = AMOUNT;
             break;
         case AMOUNT:
-            copy_parameter(context->amount, sizeof(context->amount), msg->parameter);
-            context->next_param = UNEXPECTED_PARAMETER;
-            break;
-        case REQUESTED_AMOUNT:
             copy_parameter(context->amount, sizeof(context->amount), msg->parameter);
             context->next_param = UNEXPECTED_PARAMETER;
             break;
@@ -51,12 +41,6 @@ static void handle_multiple(ethPluginProvideParameter_t *msg, context_t *context
 }
 
 static void handle_liquidate_borrow(ethPluginProvideParameter_t *msg, context_t *context) {
-    if (context->go_to_offset) {
-        if (msg->parameterOffset != context->offset + SELECTOR_SIZE) {
-            return;
-        }
-        context->go_to_offset = false;
-    }
     switch (context->next_param) {
         case TARGET_ACCOUNT:  // LiquidateBorrow
             copy_address(context->holder, sizeof(context->holder), msg->parameter);

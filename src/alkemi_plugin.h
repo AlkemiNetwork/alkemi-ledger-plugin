@@ -32,14 +32,11 @@ typedef enum {
     AMOUNT = 0,
     ASSET,
     TARGET_ACCOUNT,
-    REQUESTED_AMOUNT,
     HOLDER,
-    PATH_OFFSET,
-    PATH_LENGTH,
-    UNEXPECTED_PARAMETER,
     ASSET_BORROW,
     ASSET_COLLATERAL,
-    REQUESTED_AMOUNT_CLOSE
+    REQUESTED_AMOUNT_CLOSE,
+    UNEXPECTED_PARAMETER
 } parameter;
 
 // EDIT THIS: Rename `BOILERPLATE` to be the same as the one initialized in `main.c`.
@@ -51,13 +48,9 @@ extern const uint8_t *const ALKEMI_SELECTORS[NUM_SELECTORS];
 typedef struct context_t {
     // For display.
     uint8_t amount[INT256_LENGTH];
-    // uint8_t requested_amount[INT256_LENGTH];
     uint8_t holder[ADDRESS_LENGTH];
     uint8_t asset[ADDRESS_LENGTH];
-    // uint8_t assetBorrow[ADDRESS_LENGTH];
-    // uint8_t targetAccount[ADDRESS_LENGTH];
     uint8_t assetCollateral[ADDRESS_LENGTH];
-    // uint8_t requestedAmountClose[INT256_LENGTH];
     char ticker[MAX_TICKER_LEN];
     char ticker2[MAX_TICKER_LEN];
     uint8_t decimals;
@@ -67,12 +60,12 @@ typedef struct context_t {
     // For parsing data.
     uint8_t next_param;  // Set to be the next param we expect to parse.
     uint16_t offset;     // Offset at which the array or struct starts.
-    bool go_to_offset;   // If set, will force the parsing to iterate through parameters until
-                         // `offset` is reached.
 
     // For both parsing and display.
     alkemiSelector_t selectorIndex;
 } context_t;
+
+_Static_assert(sizeof(context_t) <= 5 * 32, "Shared context is too big");
 
 // Piece of code that will check that the above structure is not bigger than 5 * 32. Do not remove
 // this check.
