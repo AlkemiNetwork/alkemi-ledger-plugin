@@ -4,11 +4,6 @@
 // match what you wish to display.
 
 void set_asset_address_ui(ethQueryContractUI_t *msg, context_t *context) {
-    // Prefix the address with `0x`.
-
-    msg->msg[0] = '0';
-    msg->msg[1] = 'x';
-
     // We need a random chainID for legacy reasons with `getEthAddressStringFromBinary`.
     // Setting it to `0` will make it work with every chainID :)
     uint64_t chainid = 0;
@@ -19,20 +14,20 @@ void set_asset_address_ui(ethQueryContractUI_t *msg, context_t *context) {
         case ALKEMI_BORROW:
         case ALKEMI_REPAY_BORROW:
         case ALKEMI_LIQUIDATE_BORROW:
+            // Prefix the address with `0x`.
+            msg->msg[0] = '0';
+            msg->msg[1] = 'x';
             getEthAddressStringFromBinary(context->asset,
-                                          (uint8_t *) msg->msg + 2,
+                                          msg->msg + 2,
                                           msg->pluginSharedRW->sha3,
                                           chainid);
+            break;
+        default:
             break;
     }
 }
 
 void set_holder_address_ui(ethQueryContractUI_t *msg, context_t *context) {
-    // Prefix the address with `0x`.
-
-    msg->msg[0] = '0';
-    msg->msg[1] = 'x';
-
     // We need a random chainID for legacy reasons with `getEthAddressStringFromBinary`.
     // Setting it to `0` will make it work with every chainID :)
     uint64_t chainid = 0;
@@ -40,30 +35,35 @@ void set_holder_address_ui(ethQueryContractUI_t *msg, context_t *context) {
     switch (context->selectorIndex) {
         case ALKEMI_CLAIM_ALK:
         case ALKEMI_LIQUIDATE_BORROW:
+            // Prefix the address with `0x`.
+            msg->msg[0] = '0';
+            msg->msg[1] = 'x';
             getEthAddressStringFromBinary(context->holder,
-                                          (uint8_t *) msg->msg + 2,
+                                          msg->msg + 2,
                                           msg->pluginSharedRW->sha3,
                                           chainid);
+            break;
+        default:
             break;
     }
 }
 
 void set_address_collateral_ui(ethQueryContractUI_t *msg, context_t *context) {
-    // Prefix the address with `0x`.
-
-    msg->msg[0] = '0';
-    msg->msg[1] = 'x';
-
     // We need a random chainID for legacy reasons with `getEthAddressStringFromBinary`.
     // Setting it to `0` will make it work with every chainID :)
     uint64_t chainid = 0;
 
     switch (context->selectorIndex) {
         case ALKEMI_LIQUIDATE_BORROW:
+            // Prefix the address with `0x`.
+            msg->msg[0] = '0';
+            msg->msg[1] = 'x';
             getEthAddressStringFromBinary(context->assetCollateral,
-                                          (uint8_t *) msg->msg + 2,
+                                          msg->msg + 2,
                                           msg->pluginSharedRW->sha3,
                                           chainid);
+            break;
+        default:
             break;
     }
 }
@@ -74,6 +74,8 @@ static void set_third_param_ui(ethQueryContractUI_t *msg, context_t *context) {
             strlcpy(msg->title, "Asset Address.", msg->titleLength);
             set_asset_address_ui(msg, context);
             break;
+        default:
+            break;
     }
 }
 
@@ -83,6 +85,8 @@ static void set_fourth_param_ui(ethQueryContractUI_t *msg, context_t *context) {
             strlcpy(msg->title, "Collateral Asset.", msg->titleLength);
             strlcpy(msg->msg, context->ticker2, msg->msgLength);
             break;
+        default:
+            break;
     }
 }
 
@@ -91,6 +95,8 @@ static void set_fifth_param_ui(ethQueryContractUI_t *msg, context_t *context) {
         case ALKEMI_LIQUIDATE_BORROW:
             strlcpy(msg->title, "Coll. Asset Addr.", msg->titleLength);
             set_address_collateral_ui(msg, context);
+            break;
+        default:
             break;
     }
 }
@@ -112,6 +118,8 @@ static void set_second_param_ui(ethQueryContractUI_t *msg, context_t *context) {
                            context->ticker,
                            msg->msg,
                            msg->msgLength);
+            break;
+        default:
             break;
     }
 }
@@ -141,6 +149,13 @@ static void set_first_param_ui(ethQueryContractUI_t *msg, context_t *context) {
 void handle_query_contract_ui(void *parameters) {
     ethQueryContractUI_t *msg = (ethQueryContractUI_t *) parameters;
     context_t *context = (context_t *) msg->pluginContext;
+
+    // Ensure all the parameters have been received. When it is the
+    // case, next_param is always set to "UNEXPECTED_PARAMETER".
+    if (context->next_param != UNEXPECTED_PARAMETER) {
+        msg->result = ETH_PLUGIN_RESULT_ERROR;
+        return;
+    }
 
     // msg->title is the upper line displayed on the device.
     // msg->msg is the lower line displayed on the device.
