@@ -1,4 +1,4 @@
-import Zemu, { DEFAULT_START_OPTIONS} from '@zondax/zemu';
+import Zemu, {DeviceModel} from '@zondax/zemu';
 
 import Eth from '@ledgerhq/hw-app-eth';
 import { generate_plugin_config } from './generate_plugin_config';
@@ -10,32 +10,46 @@ async function waitForAppScreen(sim) {
     await sim.waitUntilScreenIsNot(sim.getMainMenuSnapshot(), transactionUploadDelay);
 }
 
-const sim_options_generic = {
-    ...DEFAULT_START_OPTIONS,
-    logging: true,
-    X11: true,
-    startDelay: 5000,
-    startText: 'is ready',
-    custom: '',
-};
-
 const Resolve = require('path').resolve;
 
 const NANOS_ETH_PATH = Resolve('elfs/ethereum_nanos.elf');
 const NANOX_ETH_PATH = Resolve('elfs/ethereum_nanox.elf');
+const NANOSP_ETH_PATH = Resolve('elfs/ethereum_nanosp.elf');
 
 const NANOS_PLUGIN_PATH = Resolve('elfs/plugin_nanos.elf');
 const NANOX_PLUGIN_PATH = Resolve('elfs/plugin_nanox.elf');
+const NANOSP_PLUGIN_PATH = Resolve('elfs/plugin_nanosp.elf');
 
 // Edit this: replace `Boilerplate` by your plugin name
 const NANOS_PLUGIN = { "Alkemi": NANOS_PLUGIN_PATH };
 const NANOX_PLUGIN = { "Alkemi": NANOX_PLUGIN_PATH };
+const NANOSP_PLUGIN = { "Alkemi": NANOSP_PLUGIN_PATH };
 
 const boilerplateJSON = generate_plugin_config();
 
 const SPECULOS_ADDRESS = '0xFE984369CE3919AA7BB4F431082D027B4F8ED70C';
 const RANDOM_ADDRESS = '0xaaaabbbbccccddddeeeeffffgggghhhhiiiijjjj'
 
+const sim_options = {
+    // Uncomment for testing
+    // logging: true,
+    X11: true,
+    startDelay: 5000,
+    startText: 'is ready',
+    custom: '',
+};
+
+class PluginDeviceModel extends DeviceModel {
+    letter: string;
+    plugin;
+    sdk: string;
+}
+
+const nano_environments: PluginDeviceModel[] = [
+    { name: 'nanos', letter: 'S', path: NANOS_ETH_PATH, plugin: NANOS_PLUGIN, sdk: '2.1'},
+    { name: 'nanox', letter: 'X', path: NANOX_ETH_PATH, plugin: NANOX_PLUGIN, sdk: '2.0.2'},
+    { name: 'nanosp', letter: "SP", path: NANOSP_ETH_PATH, plugin: NANOSP_PLUGIN, sdk: '1.0'},
+];
 
 let genericTx = {
     nonce: Number(0),
@@ -78,27 +92,12 @@ function txFromEtherscan(rawTx) {
     return txType + encoded;
 }
 
-function zemu(device, func) {
+function zemu(device: PluginDeviceModel, func) {
     return async () => {
         jest.setTimeout(TIMEOUT);
-        let eth_path;
-        let plugin;
-        let sim_options = sim_options_generic;
-
-        if (device === "nanos") {
-            eth_path = NANOS_ETH_PATH;
-            plugin = NANOS_PLUGIN;
-            sim_options.model = "nanos";
-        } else {
-            eth_path = NANOX_ETH_PATH;
-            plugin = NANOX_PLUGIN;
-            sim_options.model = "nanox";
-        }
-
-        const sim = new Zemu(eth_path, plugin);
-
+        const sim = new Zemu(device.path, device.plugin);
         try {
-            await sim.start(sim_options);
+            await sim.start({...sim_options, model: device.name, sdk: device.sdk});
             const transport = await sim.getTransport();
             const eth = new Eth(transport);
             eth.setLoadConfig({
@@ -119,4 +118,5 @@ module.exports = {
     SPECULOS_ADDRESS,
     RANDOM_ADDRESS,
     txFromEtherscan,
+    nano_environments,
 }
