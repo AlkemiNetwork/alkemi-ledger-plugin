@@ -4,15 +4,15 @@
 // `msg->token1` and `msg->token2`. If those pointers are `NULL`, this means the ethereum app didn't
 // find any info regarding the requested tokens!
 void handle_provide_token(void *parameters) {
-    ethPluginProvideToken_t *msg = (ethPluginProvideToken_t *) parameters;
+    ethPluginProvideInfo_t *msg = (ethPluginProvideInfo_t *) parameters;
     context_t *context = (context_t *) msg->pluginContext;
 
-    if (msg->token1) {
+    if (msg->item1) {
         // The Ethereum App found the information for the requested token!
         // Store its decimals.
-        context->decimals = msg->token1->decimals;
+        context->decimals = msg->item1->token.decimals;
         // Store its ticker.
-        strlcpy(context->ticker, (char *) msg->token1->ticker, sizeof(context->ticker));
+        strlcpy(context->ticker, (char *) msg->item1->token.ticker, sizeof(context->ticker));
 
         // Keep track that we found the token.
         context->token_found = true;
@@ -32,9 +32,9 @@ void handle_provide_token(void *parameters) {
         // msg->additionalScreens = 1;
     }
 
-    if (msg->token2) {
+    if (msg->item2) {
         // Store its ticker.
-        strlcpy(context->ticker2, (char *) msg->token2->ticker, sizeof(context->ticker2));
+        strlcpy(context->ticker2, (char *) msg->item2->token.ticker, sizeof(context->ticker2));
 
         // Keep track that we found the token.
         context->token2_found = true;
