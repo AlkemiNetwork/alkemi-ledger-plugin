@@ -16,10 +16,11 @@ const abi = require(abi_path);
 
 // Nanos S test
 // EDIT THIS: build your own test
-test('[Nano S] Perform a withdraw', zemu("nanos", async (sim, eth) => {
+test('[Nano S] Perform a withdraw for Max DAI', zemu("nanos", async (sim, eth) => {
   const contract = new ethers.Contract(contractAddr, abi);
 
-  const amount = parseUnits("28471151959593036279", 'wei');
+  // const amount = parseUnits("28471151959593036279", 'wei');
+  const amount = parseUnits("115792089237316195423570985008687907853269984665640564039457584007913129639935", 'wei');
 
   const DAI = "0x6b175474e89094c44da98b954eedeac495271d0f";
 
@@ -44,7 +45,7 @@ test('[Nano S] Perform a withdraw', zemu("nanos", async (sim, eth) => {
   await waitForAppScreen(sim);
   // Navigate the display by pressing the right button 10 times, then pressing both buttons to accept the transaction.
   // EDIT THIS: modify `10` to fix the number of screens you are expecting to navigate through.
-  await sim.navigateAndCompareSnapshots('.', 'nanos_perform_a_withdraw', [9, 0]);
+  await sim.navigateAndCompareSnapshots('.', 'nanos_perform_a_withdraw', [7, 0]);
 
   await tx;
 }));

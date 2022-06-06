@@ -125,18 +125,28 @@ static void set_second_param_ui(ethQueryContractUI_t *msg, context_t *context) {
 }
 
 static void set_first_param_ui(ethQueryContractUI_t *msg, context_t *context) {
+    char tmp_amount[100] = {0};
+
+    if (uint256_to_decimal(context->amount, sizeof(context->amount), tmp_amount, sizeof(tmp_amount)) == false) {
+        THROW(EXCEPTION_OVERFLOW);
+    }
     switch (context->selectorIndex) {
         case ALKEMI_WITHDRAW:
         case ALKEMI_SUPPLY:
         case ALKEMI_BORROW:
         case ALKEMI_REPAY_BORROW:
             strlcpy(msg->title, "Amount.", msg->titleLength);
-            amountToString(context->amount,
-                           sizeof(context->amount),
-                           context->decimals,
-                           context->ticker,
-                           msg->msg,
-                           msg->msgLength);
+            if (strcmp(tmp_amount, "115792089237316195423570985008687907853269984665640564039457584007913129639935") == 0) { 
+                strlcpy(msg->msg, "Max", msg->msgLength);
+            }
+            else {
+                amountToString(context->amount,
+                            sizeof(context->amount),
+                            context->decimals,
+                            context->ticker,
+                            msg->msg,
+                            msg->msgLength);
+            }
             break;
         case ALKEMI_CLAIM_ALK:
         case ALKEMI_LIQUIDATE_BORROW:
