@@ -142,7 +142,8 @@ static void set_first_param_ui(ethQueryContractUI_t *msg, context_t *context) {
             if (strcmp(tmp_amount,
                        "115792089237316195423570985008687907853269984665640564039457584007913129639"
                        "935") == 0) {
-                strlcpy(msg->msg, "Max", msg->msgLength);
+                memcpy(msg->msg, context->ticker, strnlen(context->ticker, MAX_TICKER_LEN));
+                strncat(msg->msg, " Max", strnlen(" Max", 10));
             } else {
                 amountToString(context->amount,
                                sizeof(context->amount),
