@@ -16,6 +16,39 @@ const abi = require(abi_path);
 
 // Nanos S test
 // EDIT THIS: build your own test
+test('[Nano S] Perform a withdraw', zemu("nanos", async (sim, eth) => {
+  const contract = new ethers.Contract(contractAddr, abi);
+
+  const amount = parseUnits("28471151959593036279", 'wei');
+
+  const DAI = "0x6b175474e89094c44da98b954eedeac495271d0f";
+
+  const {data} = await contract.populateTransaction.withdraw(DAI, amount );
+
+  // Get the generic transaction template
+  let unsignedTx = genericTx;
+  // Modify `to` to make it interact with the contract
+  unsignedTx.to = contractAddr;
+  // Modify the attached data
+  unsignedTx.data = data;
+
+  // Create serializedTx and remove the "0x" prefix
+  const serializedTx = ethers.utils.serializeTransaction(unsignedTx).slice(2);
+
+  const tx = eth.signTransaction(
+    "44'/60'/0'/0",
+    serializedTx
+  );
+
+  // Wait for the application to actually load and parse the transaction
+  await waitForAppScreen(sim);
+  // Navigate the display by pressing the right button 10 times, then pressing both buttons to accept the transaction.
+  // EDIT THIS: modify `10` to fix the number of screens you are expecting to navigate through.
+  await sim.navigateAndCompareSnapshots('.', 'nanos_perform_a_withdraw', [9, 0]);
+
+  await tx;
+}));
+
 test('[Nano S] Perform a withdraw for Max DAI', zemu("nanos", async (sim, eth) => {
   const contract = new ethers.Contract(contractAddr, abi);
 
@@ -45,7 +78,7 @@ test('[Nano S] Perform a withdraw for Max DAI', zemu("nanos", async (sim, eth) =
   await waitForAppScreen(sim);
   // Navigate the display by pressing the right button 10 times, then pressing both buttons to accept the transaction.
   // EDIT THIS: modify `10` to fix the number of screens you are expecting to navigate through.
-  await sim.navigateAndCompareSnapshots('.', 'nanos_perform_a_withdraw', [7, 0]);
+  await sim.navigateAndCompareSnapshots('.', 'nanos_perform_a_max_withdraw', [7, 0]);
 
   await tx;
 }));
