@@ -16,7 +16,7 @@ const abi = require(abi_path);
 
 // Nanos S test
 // EDIT THIS: build your own test
-test('[Nano S] Perform a repay borrow', zemu("nanos", async (sim, eth) => {
+test.skip('[Nano S] Perform a repay borrow', zemu("nanos", async (sim, eth) => {
   const contract = new ethers.Contract(contractAddr, abi);
 
   const amount = parseUnits("28471151959593036279", 'wei');
