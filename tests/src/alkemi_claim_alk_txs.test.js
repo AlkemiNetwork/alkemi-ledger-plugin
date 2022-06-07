@@ -33,15 +33,15 @@ nano_environments.forEach(function(model) {
         const serializedTx = ethers.utils.serializeTransaction(unsignedTx).slice(2);
 
         const tx = eth.signTransaction(
-          "44'/60'/0'/0",
-          serializedTx
+            "44'/60'/0'/0",
+            serializedTx
         );
 
         // Wait for the application to actually load and parse the transaction
         await waitForAppScreen(sim);
         let r_clicks = 4;
         if (model.letter == 'S') {
-            r_clicks = 6;
+                r_clicks = 6;
         }
         await sim.navigateAndCompareSnapshots('.', `${model.name}_perform_an_ALK_claim`, [r_clicks, 0]);
 

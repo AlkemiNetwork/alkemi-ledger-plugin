@@ -53,3 +53,41 @@ nano_environments.forEach(function(model) {
     }))
 });
 
+nano_environments.forEach(function(model) {
+    test(`[Nano ${model.letter}] Perform a withdraw for Max DAI`, zemu(model, async (sim, eth) => {
+        const contract = new ethers.Contract(contractAddr, abi);
+
+        // const amount = parseUnits("28471151959593036279", 'wei');
+        const amount = parseUnits("115792089237316195423570985008687907853269984665640564039457584007913129639935", 'wei');
+
+        const DAI = "0x6b175474e89094c44da98b954eedeac495271d0f";
+
+        const {data} = await contract.populateTransaction.withdraw(DAI, amount );
+
+        // Get the generic transaction template
+        let unsignedTx = genericTx;
+        // Modify `to` to make it interact with the contract
+        unsignedTx.to = contractAddr;
+        // Modify the attached data
+        unsignedTx.data = data;
+
+        // Create serializedTx and remove the "0x" prefix
+        const serializedTx = ethers.utils.serializeTransaction(unsignedTx).slice(2);
+
+        const tx = eth.signTransaction(
+            "44'/60'/0'/0",
+            serializedTx
+        );
+
+        // Wait for the application to actually load and parse the transaction
+        await waitForAppScreen(sim);
+        let r_clicks = 5;
+        if (model.letter == 'S') {
+            r_clicks = 7;
+        }
+        await sim.navigateAndCompareSnapshots('.', `${model.name}_perform_a_max_withdraw`, [r_clicks, 0]);
+
+        await tx;
+        await Zemu.sleep(500);
+    }))
+});

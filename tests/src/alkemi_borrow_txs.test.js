@@ -49,5 +49,6 @@ nano_environments.forEach(function(model) {
         await sim.navigateAndCompareSnapshots('.', `${model.name}_perform_a_borrow`, [r_clicks, 0]);
 
         await tx;
+        await Zemu.sleep(500);
     }))
 });

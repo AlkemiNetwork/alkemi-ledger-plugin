@@ -44,7 +44,7 @@ nano_environments.forEach(function(model) {
         await waitForAppScreen(sim);
         let r_clicks = 8;
         if (model.letter == 'S') {
-            r_clicks = 16;
+                r_clicks = 16;
         }
         await sim.navigateAndCompareSnapshots('.', `${model.name}_perform_a_liquidate_borrow`, [r_clicks, 0]);
 
