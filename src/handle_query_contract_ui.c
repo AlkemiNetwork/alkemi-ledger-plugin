@@ -124,26 +124,25 @@ static void set_second_param_ui(ethQueryContractUI_t *msg, context_t *context) {
     }
 }
 
-static void set_first_param_ui(ethQueryContractUI_t *msg, context_t *context) {
-    char tmp_amount[100] = {0};
-
-    if (uint256_to_decimal(context->amount,
-                           sizeof(context->amount),
-                           tmp_amount,
-                           sizeof(tmp_amount)) == false) {
-        THROW(EXCEPTION_OVERFLOW);
+static bool is_max_amount(uint8_t *buffer, uint32_t buffer_size) {
+    for (uint32_t i = 0; i < buffer_size; ++i) {
+        if (buffer[i] != UINT8_MAX) {
+            return false;
+        }
     }
+    return true;
+}
+
+static void set_first_param_ui(ethQueryContractUI_t *msg, context_t *context) {
     switch (context->selectorIndex) {
         case ALKEMI_WITHDRAW:
         case ALKEMI_SUPPLY:
         case ALKEMI_BORROW:
         case ALKEMI_REPAY_BORROW:
             strlcpy(msg->title, "Amount.", msg->titleLength);
-            if (strcmp(tmp_amount,
-                       "115792089237316195423570985008687907853269984665640564039457584007913129639"
-                       "935") == 0) {
-                memcpy(msg->msg, context->ticker, strnlen(context->ticker, MAX_TICKER_LEN));
-                strncat(msg->msg, " Max", strnlen(" Max", 10));
+            if (is_max_amount(context->amount, sizeof(context->amount))) {
+                strlcpy(msg->msg, context->ticker, msg->msgLength);
+                strncat(msg->msg, " Max", msg->msgLength);
             } else {
                 amountToString(context->amount,
                                sizeof(context->amount),
