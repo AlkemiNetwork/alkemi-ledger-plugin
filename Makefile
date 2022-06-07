@@ -24,20 +24,24 @@ include $(BOLOS_SDK)/Makefile.defines
 # EDIT THIS: Put your plugin name
 APPNAME = "Alkemi"
 
-APP_LOAD_PARAMS += --appFlags 0x800 --path "44'/60'" --path "45'" --curve secp256k1
+ifeq ($(ETHEREUM_PLUGIN_SDK),)
+ETHEREUM_PLUGIN_SDK=ethereum-plugin-sdk
+endif
+
+APP_LOAD_PARAMS += --appFlags 0x800 --path "44'/60'" --curve secp256k1
 
 APP_LOAD_PARAMS += $(COMMON_LOAD_PARAMS)
 
 APPVERSION_M     = 1
 APPVERSION_N     = 0
-APPVERSION_P     = 0
+APPVERSION_P     = 1
 APPVERSION       = "$(APPVERSION_M).$(APPVERSION_N).$(APPVERSION_P)"
 
 # EDIT THIS: Change the name of the gif, and generate you own GIFs!
-ifeq ($(TARGET_NAME), TARGET_NANOX)
-ICONNAME=icons/nanox_app_boilerplate.gif
-else
+ifeq ($(TARGET_NAME), TARGET_NANOS)
 ICONNAME=icons/nanos_app_boilerplate.gif
+else
+ICONNAME=icons/nanox_app_boilerplate.gif
 endif
 
 ################
@@ -58,10 +62,14 @@ DEFINES   += UNUSED\(x\)=\(void\)x
 DEFINES   += APPVERSION=\"$(APPVERSION)\"
 
 ifeq ($(TARGET_NAME),TARGET_NANOX)
-DEFINES   += IO_SEPROXYHAL_BUFFER_SIZE_B=300
 DEFINES   += HAVE_BLE BLE_COMMAND_TIMEOUT_MS=2000
 DEFINES   += HAVE_BLE_APDU # basic ledger apdu transport over BLE
+endif
 
+ifeq ($(TARGET_NAME),TARGET_NANOS)
+DEFINES   += IO_SEPROXYHAL_BUFFER_SIZE_B=128
+else
+DEFINES   += IO_SEPROXYHAL_BUFFER_SIZE_B=300
 DEFINES   += HAVE_GLO096
 DEFINES   += HAVE_BAGL BAGL_WIDTH=128 BAGL_HEIGHT=64
 DEFINES   += HAVE_BAGL_ELLIPSIS # long label truncation feature
@@ -69,16 +77,28 @@ DEFINES   += HAVE_BAGL_FONT_OPEN_SANS_REGULAR_11PX
 DEFINES   += HAVE_BAGL_FONT_OPEN_SANS_EXTRABOLD_11PX
 DEFINES   += HAVE_BAGL_FONT_OPEN_SANS_LIGHT_16PX
 DEFINES   += HAVE_UX_FLOW
-else
-DEFINES   += IO_SEPROXYHAL_BUFFER_SIZE_B=128
 endif
 
 
 # Enabling debug PRINTF
 DEBUG:= 0
 ifneq ($(DEBUG),0)
-        DEFINES += PRINTF=semihosted_printf
-        CFLAGS    += -include src/dbg/debug.h
+        DEFINES += HAVE_STACK_OVERFLOW_CHECK
+        SDK_SOURCE_PATH  += lib_stusb lib_stusb_impl lib_u2f
+        DEFINES   += HAVE_IO_USB HAVE_L4_USBLIB IO_USB_MAX_ENDPOINTS=4 IO_HID_EP_LENGTH=64 HAVE_USB_APDU
+
+        ifeq ($(DEBUG),10)
+                $(warning Using semihosted PRINTF. Only run with speculos!)
+                CFLAGS    += -include src/dbg/debug.h
+                DEFINES   += HAVE_PRINTF PRINTF=semihosted_printf
+        else
+                ifeq ($(TARGET_NAME),TARGET_NANOS)
+                        DEFINES   += HAVE_PRINTF PRINTF=screen_printf
+                else
+                        DEFINES   += HAVE_PRINTF PRINTF=mcu_usb_printf
+                endif
+
+        endif
 else
         DEFINES   += PRINTF\(...\)=
 endif
@@ -102,7 +122,7 @@ endif
 
 CC       := $(CLANGPATH)clang
 
-CFLAGS   += -O3 -Os
+CFLAGS   += -Oz -Wno-format-invalid-specifier -Wno-format-extra-args
 
 AS     := $(GCCPATH)arm-none-eabi-gcc
 
@@ -114,14 +134,14 @@ LDLIBS   += -lm -lgcc -lc
 include $(BOLOS_SDK)/Makefile.glyphs
 
 ### variables processed by the common makefile.rules of the SDK to grab source files and include dirs
-APP_SOURCE_PATH  += src ethereum-plugin-sdk
+APP_SOURCE_PATH  += src $(ETHEREUM_PLUGIN_SDK)
 SDK_SOURCE_PATH  += lib_ux
 ifneq (,$(findstring HAVE_BLE,$(DEFINES)))
 SDK_SOURCE_PATH  += lib_blewbxx lib_blewbxx_impl
 endif
 
 # remove UX warnings from SDK even though the plugin doesn't use it
-DEFINES		     += HAVE_UX_FLOW
+DEFINES          += HAVE_UX_FLOW
 
 ### initialize plugin SDK submodule if needed
 ifneq ($(shell git submodule status | grep '^[-+]'),)
@@ -144,4 +164,4 @@ dep/%.d: %.c Makefile
 
 listvariants:
         # EDIT THIS: replace `boilerplate` by the lowercase name of your plugin
-	@echo VARIANTS NONE boilerplate 
+	@echo VARIANTS NONE alkemi
