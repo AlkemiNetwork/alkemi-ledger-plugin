@@ -21,3 +21,6 @@ __pycache__/
 # JS
 tests/node_modules
 tests/lib
+
+# Compiled plugin
+tests/elfs/plugin_nano*.elf
